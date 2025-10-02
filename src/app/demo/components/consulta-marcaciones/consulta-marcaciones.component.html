@@ -1,0 +1,124 @@
+<div style="margin:10px;">
+    <p-panel header="Consulta Marcaciones">
+        <p-breadcrumb class="max-w-full" [model]="items"></p-breadcrumb>
+        <br>
+    </p-panel>
+</div>
+
+<!-- Formulario de búsqueda avanzada -->
+<div style="margin: 10px;">
+    <form [formGroup]="searchForm" (ngSubmit)="buscarConParametros()">
+      <div class="p-fluid grid">
+        <div class="field col-12 md:col-3">
+          <label for="nombreSedeEquipo">Sede Equipo</label>
+          <p-dropdown
+            id="nombreSedeEquipo"
+            formControlName="nombreSedeEquipo"
+            [options]="sedesEquipos"
+            placeholder="Seleccione Sede Equipo"
+            [showClear]="true"
+            [filter]="true"
+            filterBy="label"
+            optionLabel="label"
+          ></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="nombreEquipo">Equipo</label>
+          <p-dropdown
+            id="nombreEquipo"
+            formControlName="nombreEquipo"
+            [options]="equipos"
+            placeholder="Seleccione Equipo"
+            [showClear]="true"
+            [filter]="true"
+            filterBy="label"
+            optionLabel="label"
+          ></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="nombreSedeTrabajador">Sede Trabajador</label>
+          <p-dropdown
+            id="nombreSedeTrabajador"
+            formControlName="nombreSedeTrabajador"
+            [options]="sedesTrabajador"
+            placeholder="Seleccione Sede Trabajador"
+            [showClear]="true"
+            [filter]="true"
+            filterBy="label"
+            optionLabel="label"
+          ></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-3">
+            <label>.</label>
+            <button pButton type="submit" label="Buscar" icon="pi pi-search"></button>
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="fechaInicio">Fecha Inicio</label>
+          <p-calendar id="fechaInicio" formControlName="fechaInicio" dateFormat="yy-mm-dd"></p-calendar>
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="fechaFin">Fecha Fin</label>
+          <p-calendar id="fechaFin" formControlName="fechaFin" dateFormat="yy-mm-dd"></p-calendar>
+        </div>
+        <div class="field col-12 md:col-3">
+            <label>absd</label>
+            <button pButton type="" label="Exportar Excel" icon="pi pi-file-excel" class="p-button-success"></button>
+        </div>
+        <div class="field col-12 md:col-3">
+            <label>.</label>
+            <button pButton type="" label="Exportar TXT" icon="pi pi-file" class="p-button-info"></button>
+        </div>
+    </div>
+    </form>
+</div>
+
+<br>
+
+<div>
+    <p-table
+        #dt1
+        [value]="marcaciones"
+        [columns]="columnas"
+        dataKey="item"
+        [rows]="5"
+        [editMode]=""
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [paginator]="true"
+        [loading]="loading"
+        [globalFilterFields]="columnsGlobalFilterFields"
+        [tableStyle]="'min-width: 75rem'">
+
+        <!-- Encabezado con filtros -->
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columnas">
+                    {{ col.header }}
+                    <p-columnFilter
+                        [field]="col.field"
+                        [matchMode]="'contains'"
+                        [showMenu]="false"
+                        [showOperator]="false"
+                        placeholder="Buscar {{ col.header }}">
+                    </p-columnFilter>
+                </th>
+            </tr>
+        </ng-template>
+
+        <!-- Cuerpo de la tabla -->
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columnas">
+                    {{ rowData[col.field] }}
+                </td>
+            </tr>
+        </ng-template>
+
+        <!-- Mensaje vacío -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="{{ columnas.length }}">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,21 @@
+:host ::ng-deep .tabla-scroll-fija .p-datatable-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    z-index: 10;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    padding-bottom: 4px;
+}
+.p-dialog .p-dialog-content {
+    overflow: visible !important; }
+
+.p-dropdown{
+    min-width: 195px !important;
+}
+
+.d-block-ruby-w127{
+    display: block ruby;
+    width: 127px;
+}

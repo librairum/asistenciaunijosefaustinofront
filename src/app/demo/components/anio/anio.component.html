@@ -1,0 +1,111 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="container">
+  <p-panel header="Mantenimiento de Años" class="mb-3">
+    <p-breadcrumb [model]="items" class="max-w-full"></p-breadcrumb>
+  </p-panel>
+
+  <div class="card">
+    <div class="flex justify-content-start mb-3">
+      <button type="button" pButton icon="pi pi-plus" label="Nuevo"
+              (click)="showAddRow()" [disabled]="isEditingAnyRow" class="p-button-sm"></button>
+    </div>
+
+    <p-table [value]="mAnioList" dataKey="pla61Codigo" editMode="row"
+             [paginator]="true" [rows]="5" responsiveLayout="scroll"
+             >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-6">Código</th>
+          <th class="w-6">Descripción</th>
+          <th style="width: 10rem">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-anio let-ri="rowIndex" let-editing="editing">
+        <tr [pEditableRow]="anio">
+            <td [pEditableColumn]="editingRowIndex === ri ? anio.pla61Codigo : null" [pEditableColumnField]="'pla61Codigo'">
+                <p-cellEditor *ngIf="editingRowIndex === ri">
+                    <ng-template pTemplate="input">
+                        <div class="p-inputgroup">
+                            <input pInputText type="text" [(ngModel)]="anio.pla61Codigo" class="p-inputtext-sm" required>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                        {{ anio.pla61Codigo }}
+                    </ng-template>
+                </p-cellEditor>
+                <div *ngIf="editingRowIndex !== ri">
+                    {{ anio.pla61Codigo }}
+                </div>
+            </td>
+            <td>
+                <div *ngIf="!editing">
+                    {{ anio.pla61Descripcion }}
+                </div>
+                <div *ngIf="editing">
+                    <input pInputText type="text" [(ngModel)]="anio.pla61Descripcion"
+                           class="p-inputtext-sm w-full" required>
+                </div>
+            </td>
+            <td>
+                <div class="flex justify-content-center gap-2">
+                <button *ngIf="!editing" pButton pInitEditableRow
+                        (click)="onRowEditInit(anio)"
+                        icon="pi pi-pencil" pTooltip="Editar Año"
+                        [disabled]="isNew || isEditingAnyRow"
+                        class="p-button-rounded p-button-text p-button-sm"></button>
+                <button *ngIf="editing" pButton pSaveEditableRow
+                        (click)="onRowEditSave(anio)"
+                        icon="pi pi-check" pTooltip="Guardar"
+                        class="p-button-rounded p-button-text p-button-sm p-button-success"></button>
+                <button *ngIf="editing" pButton pCancelEditableRow
+                        (click)="onRowEditCancel(anio, ri)"
+                        icon="pi pi-times" pTooltip="Cancelar"
+                        class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                <button *ngIf="!editing" pButton type="button"
+                        (click)="onDelete(anio, ri)"
+                        icon="pi pi-trash" pTooltip="Borrar Año"
+                        [disabled]="isNew || isEditingAnyRow"
+                        class="p-button-rounded p-button-text p-button-sm p-button-danger"></button>
+                </div>
+            </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <tr *ngIf="isEditing">
+          <td colspan="3">
+            <form [formGroup]="mAnioForm" class="grid">
+              <div class="col-5">
+                <span class="p-input-icon-left w-full">
+                  <i class="pi pi-tag"></i>
+                  <input pInputText formControlName="pla61Codigo"
+                         placeholder="Código" class="p-inputtext-sm w-full"/>
+                </span>
+              </div>
+              <div class="col-5">
+                <span class="p-input-icon-left w-full">
+                  <i class="pi pi-file"></i>
+                  <input pInputText formControlName="pla61Descripcion"
+                         placeholder="Descripción" class="p-inputtext-sm w-full"/>
+                </span>
+              </div>
+              <div class="col-2">
+                <div class="flex gap-2 justify-content-end">
+                  <button type="button" pButton icon="pi pi-save"
+                          (click)="onSave()"
+                          class="p-button-sm"></button>
+                  <button type="button" pButton icon="pi pi-times"
+                          (click)="onCancel()"
+                          class="p-button-sm p-button-secondary"></button>
+                </div>
+              </div>
+            </form>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

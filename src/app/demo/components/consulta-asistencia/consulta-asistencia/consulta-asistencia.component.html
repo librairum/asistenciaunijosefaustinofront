@@ -1,0 +1,175 @@
+<p-toast></p-toast>
+<div class="m-3">
+    <p-panel header="Consulta de Resumen de Asistencia">
+        <p-breadcrumb class="w-full" [model]="items"></p-breadcrumb>
+        <br />
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center">
+            <!-- Fecha de Inicio -->
+            <div class="text-center">
+                <div class="field">
+                    <label for="startDate" class="mr-2 font-medium text-gray-700">Fecha de Inicio</label>
+                    <p-calendar
+                        dateFormat="dd/mm/yy"
+                        [(ngModel)]="startDate"
+                        inputId="startDate"
+                        placeholder="Selecciona una fecha"
+                        [locale]="espaniol"
+                        [showIcon]="true"
+                        class="w-full"
+                    ></p-calendar>
+                </div>
+            </div>
+
+            <!-- Fecha Fin -->
+            <div class="text-center">
+                <div class="field">
+                    <label for="endDate" class="mr-2 font-medium text-gray-700">Fecha Fin</label>
+                    <p-calendar
+                        dateFormat="dd/mm/yy"
+                        [(ngModel)]="endDate"
+                        inputId="endDate"
+                        placeholder="Selecciona una fecha"
+                        [showIcon]="true"
+                        class="w-full"
+                    ></p-calendar>
+                </div>
+            </div>
+
+            <!-- Planilla -->
+            <div class="text-center">
+                <div class="field">
+                    <label for="planilla" class="mr-2 font-medium text-gray-700">Planilla</label>
+                    <p-dropdown
+                        [options]="planilla"
+                        optionLabel="nombrePlanilla"
+                        optionValue="codigoPlanilla"
+                        placeholder="Selecciona la planilla"
+                        [(ngModel)]="selectedPlanilla"
+                        (onChange)="onPlanillaChange($event)"
+                        class="w-full"
+                    ></p-dropdown>
+                </div>
+            </div>
+            <div class="text-center">
+                <div class="field">
+                    <label for="marcador" class="mr-2 font-medium text-gray-700">Marcador</label>
+                   
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center mt-4">
+            <!-- Botón Buscar -->
+            <div class="text-center">
+                <button
+                    pButton
+                    type="button"
+                    label="Buscar"
+                    icon="pi pi-search"
+                    (click)="cargarResumen()"
+                    class="w-full p-button-sm"
+                ></button>
+            </div>
+
+            <!-- Botón Exportar -->
+            <div class="text-center">
+                <button
+                    pButton
+                    type="button"
+                    label="Exportar"
+                    icon="pi pi-file-excel"
+                    (click)="generateEXCEL()"
+                    class="w-full p-button-xs p-button-success"
+                ></button>
+            </div>
+
+            <!-- Botón TXT -->
+            <div class="text-center">
+                <button
+                    pButton
+                    type="button"
+                    label="TXT"
+                    icon="pi pi-file"
+                    (click)="generateTXT()"
+                    class="w-full p-button-xs p-button-info"
+                ></button>
+            </div>
+        </div>
+    </p-panel>
+</div>
+
+<div class="m-3 card">
+    <p-table
+        #dt1
+        [value]="asistencia"
+        [columns]="columnas"
+        dataKey="item"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [paginator]="true"
+        [loading]="loading"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [globalFilterFields]="columnsGlobalFilterFields"
+        [filters]="filters"
+    >
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">{{ col.header }}</th>
+            </tr>
+            <tr>
+                <th *ngFor="let col of columns">
+                    <p-columnFilter
+                        *ngIf="col.field === 'nombretrabajador'"
+                        type="text"
+                        field="nombretrabajador"
+                        placeholder="Ingrese el nombre del trabajador"
+                        [showMenu]="false"
+                        matchMode="contains"
+                    ></p-columnFilter>
+                </th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+            <tr>
+                <td>{{ rowData.item }}</td>
+                <td>{{ rowData.codigoTrabajador }}</td>
+                <td>{{ rowData.nombretrabajador }}</td>
+                <td>{{rowData.dias}}</td>
+                <td>{{ rowData.diasFalta }}</td>
+                <td>{{rowData.diasDescanso}}</td>
+                <td>{{rowData.horasTrabajadas}}</td>
+                <td>{{rowData.horasHorario}}</td>
+                <td>{{rowData.horasExtrasTotales}}</td>
+                
+                <!-- <td>{{ rowData.nHraDomPag }}</td>
+                <td>{{ rowData.nHraFerTra }}</td>
+                <td>{{ rowData.hturnoManu }}</td>
+                <td>{{ rowData.minTardanza }}</td> -->
+                <td>{{ rowData.nHorExtr25 }}</td>
+                <td>{{ rowData.nHorExtr35 }}</td>
+                <td>{{ rowData.nHorExtr50 }}</td>
+                <td>{{ rowData.nHorExtr60 }}</td>
+                <td>{{ rowData.nHorExtr100 }}</td>
+                <td>{{ rowData.nHorExtr100Obrero }}</td>
+                <!-- <td>{{ rowData.nHorExtrDo }}</td> -->
+                <td>
+                    <button
+                        pButton
+                        icon="pi pi-eye"
+                        label="Ver"
+                        class="p-button-sm"
+                        (click)="viewDetails(rowData)"
+                    ></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

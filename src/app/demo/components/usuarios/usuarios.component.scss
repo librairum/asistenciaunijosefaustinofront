@@ -1,0 +1,13 @@
+.disabled-table {
+    background-color: #dadada; /* Color plomo claro */
+    pointer-events: none; /* Deshabilita clics */
+    opacity: 0.6; /* Efecto visual de deshabilitado */
+}
+
+.p-table {
+    transition: background-color 0.3s, opacity 0.3s;
+}
+.centered {
+    text-align: center;
+    vertical-align: middle;
+}

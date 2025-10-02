@@ -1,0 +1,88 @@
+<!-- asistencia-detalle.component.html -->
+<div class="m-3">
+    <p-panel header="Detalle de Asistencia">
+        <div>
+            <p-breadcrumb [model]="breadcrumbs" [class]="'max-w-full'"></p-breadcrumb>
+        </div>
+        <div class="mt-4 text-left">
+            <button pButton type="button" label="Exportar" icon="pi pi-file-excel"
+                class="p-button-sm p-button-success" (click)="generateEXCEL()"></button>
+        </div>
+        <div class="mt-4">
+            <p-table #dt1 [value]="asistencias" [tableStyle]="{ 'min-width': '100%' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Nro.Doc</th>
+                        <th>Nombres <br/> Completo</th>
+                        <th>Horario Motivo</th>
+                        <th>Horario</th>
+                        <th>Fecha</th>
+                        <th>Día</th>
+                        <th>Hora Entrada</th>
+                        <th>Hora Salida</th>
+                        <th>Hora trabajas</th>
+                        <th>Hora Ext.Total</th>
+                        <!-- <th>Dias falta</th> -->
+
+                        <!-- <th>horas Domingo pagada</th>
+                        <th>horas feriado trabajado</th>
+                        <th>Horas turno Manual</th>
+                        <th>Minutos tardanza</th>                         -->
+                        <th>Horas 25</th>
+                        <th>Horas 35</th>
+                        <th>Horas 50</th>
+                        <th>Horas 60</th>
+                        <th>Horas 100</th>
+                        <th>Horas 100 Obrero</th>
+                        <!-- <th>Horas Extra doble</th> -->
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData>
+                    <tr>
+                        <td>{{ rowData.item }}</td>
+                        <td>{{rowData.codigotrabajador}}</td>
+                        <td>{{ rowData.nombreTrabajador }}</td>
+                        <td>{{rowData.horarioPersonalizado_Motivo}}</td>
+                        <td>{{rowData.horarioPersonalizado}}</td>
+                        <td>{{ rowData.fechaMarcacion }}</td>
+                        <td>{{ rowData.diaNombre}}</td>
+                        <td>{{ rowData.horaEntrada }}</td>
+                        <td>{{ rowData.horaSalida }}</td>
+                        <td>{{rowData.horasTrabajadas}}</td>
+                        <td>{{rowData.horasExtrasTrabajadas}}</td>
+
+                        <!-- <td>{{ rowData.diasFalta }}</td> -->
+                        <!-- <td>{{ rowData.nHraDomPag }}</td>
+                        <td>{{ rowData.nHraFerTra }}</td>
+                        <td>{{ rowData.hturnoManu }}</td>
+                        <td>{{ rowData.minTardanza }}</td> -->
+                        <td>{{ rowData.nHorExtr25 }}</td>
+                        <td>{{ rowData.nHorExtr35 }}</td>
+                        <td>{{ rowData.nHorExtr50 }}</td>
+                        <td>{{ rowData.nHorExtr60 }}</td>
+                        <td>{{ rowData.nHorExtr100 }}</td>
+                        <td>{{ rowData.nHorExtr100Obrero }}</td>
+                        <!-- <td>{{rowData.nHorExtrDo}}</td> -->
+                    </tr>
+                </ng-template>
+
+                        <ng-template pTemplate="footer">
+                            <tr>
+                                <td colspan="9" class="text-right font-bold">Totales:</td>
+
+                                <td>{{calculateTotal("horasTrabajadas")}}</td>
+                                <td>{{calculateTotal("horasExtrasTrabajadas")}} </td>
+                                <td>{{ calculateTotal('nHorExtr25') }}</td>
+                                <td>{{ calculateTotal('nHorExtr35') }}</td>
+                                <td>{{ calculateTotal('nHorExtr50') }}</td>
+                                <td>{{ calculateTotal('nHorExtr60') }}</td>
+                                <td>{{ calculateTotal('nHorExtr100') }}</td>
+                                <td>{{ calculateTotal('nHorExtr100Obrero') }}</td>
+                            </tr>
+                        </ng-template>
+            </p-table>
+        </div>
+    </p-panel>
+</div>
