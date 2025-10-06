@@ -4,7 +4,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { Marcador } from '../model/Marcador';
 import { Marcador_ins } from '../model/Marcador';
 import { ApiResponse } from '../model/api_response';
-import { Asistenciageneral } from '../model/asistenciageneral';
+import { Asistenciageneral, Departamento } from '../model/asistenciageneral';
 import { GlobalserviceService } from './globalservice.service';
 import { ConfigService } from './config.service';
 @Injectable({
@@ -22,6 +22,11 @@ export class AsistenciaGeneralService {
         let urlConsulta = `${this.apiUrl}/SpListAsistenciGeneral?fechainicio=${fechainicio}&fechafin=${fechafin}&marcadores=${marcadores}`
 
         return this.http.get<ApiResponse<Asistenciageneral>>(urlConsulta)
+                  .pipe(map(response => response.data));
+    }
+    getListaDepartamento(empresa:string){
+        let urlConsulta = `${this.apiUrl}/SpListaDepartamento?empresa=${empresa}`
+        return this.http.get<ApiResponse<Departamento>>(urlConsulta)
                   .pipe(map(response => response.data));
     }
 }

@@ -25,6 +25,7 @@ import { PrimeNGConfig } from 'primeng/api';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MarcadorService } from '../../service/marcador.service';
 import { Marcador } from '../../model/Marcador';
+import { Departamento } from '../../model/asistenciageneral';
 import {saveAs} from 'file-saver';
 @Component({
     selector: 'app-asistenciageneral',
@@ -66,7 +67,8 @@ export class AsistenciageneralComponent implements OnInit {
     maxEndDate: Date | null = null;
     filters: any;
     relojesAsistencia:Marcador[] = [];
-    relojesSeleccionados:string[] = [];
+    departamentoSeleccionados:string[] = [];
+    departamentoLista: Departamento[] = [];
     @ViewChild('dt1') dt1: Table | undefined; // Referencia a p-table
 
     constructor(
@@ -150,16 +152,30 @@ export class AsistenciageneralComponent implements OnInit {
 
         this.loadAsistenciagenerales();
         this.cargarMarcadores();
+        this.cargarDepartamentos();
     }
+    cargarDepartamentos():void{
+         this.mrS.getListaDepartamento('01')
+         .subscribe({
+            next:(data)=>{
+                this.departamentoLista = data;
+                  console.log("list ade deparmtaneots",data);
+            },
+            error:(err) =>{
+                this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'No se pudieron cargar los datos',
+                    });
+            }   
+         });
+        }
     cargarMarcadores(): void{
         
         this.marcadorService.getMarcadores().subscribe({
             next:(data)=>{
                 this.relojesAsistencia = data;
-                console.log("relojes de asistencia");
-                console.log(this.relojesAsistencia)
-                console.log("variable data:")
-                console.log(data);
+              
             },
             error:(err)=>{
                  this.messageService.add({
@@ -174,14 +190,16 @@ export class AsistenciageneralComponent implements OnInit {
     loadAsistenciagenerales(): void {
         this.loading = true;
         //modificar el caracte de contactenacion de relojes marcados
-        let listaRelojes : string = '';
-        listaRelojes   =  this.relojesSeleccionados.join('|');
-        //console.log("Relojes seleccionados: " + listaRelojes);
+        let valoresSeleccionados : string = '';
+        valoresSeleccionados   =  this.departamentoSeleccionados.join('|');
+        
+        console.log("valores seleccionado deparmtneot:",valoresSeleccionados);
+        
         this.mrS
-            .getAsistenciaByDateRange(this.stardate, this.enddate, listaRelojes)
+            .getAsistenciaByDateRange(this.stardate, this.enddate, valoresSeleccionados)
             .subscribe({
                 next: (data) => {
-                    //console.log('Datos obtenidos:', data); // Console log para verificar la data
+                    
                     this.Asistenciagenerales = data;
                     this.Asistenciagenerales.forEach(
                         (Asistenciageneral, index) => {
@@ -193,7 +211,7 @@ export class AsistenciageneralComponent implements OnInit {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'No se pudieron cargar los datos',
+                        detail: `No se pudieron cargar los datos : ${err}`,
                     });
                 },
                 complete: () => {
@@ -201,23 +219,24 @@ export class AsistenciageneralComponent implements OnInit {
                 },
             });
     }
-         convertirHoraA12Horas(hora24: string): string {
-  // Split the time string into parts
-  const partes = hora24.split(':');
-  let horas = parseInt(partes[0]);
-  const minutos = partes[1];
-  const segundos = partes[2] || '00'; // Default to 00 if seconds are not present
+    convertirHoraA12Horas(hora24: string): string {
+        // Split the time string into parts
+        const partes = hora24.split(':');
+        let horas = parseInt(partes[0]);
+        const minutos = partes[1];
+        const segundos = partes[2] || '00'; // Default to 00 if seconds are not present
 
-  // Determine AM or PM
-  const ampm = horas >= 12 ? 'PM' : 'AM';
+        // Determine AM or PM
+        const ampm = horas >= 12 ? 'PM' : 'AM';
 
-  // Convert from 24-hour to 12-hour format
-  horas = horas % 12;
-  horas = horas ? horas : 12; // The hour '0' should be '12'
+        // Convert from 24-hour to 12-hour format
+        horas = horas % 12;
+        horas = horas ? horas : 12; // The hour '0' should be '12'
 
-  // Return the formatted string
-  return `${horas}:${minutos}:${segundos}, 00000000  ${ampm}`;
-}
+        // Return the formatted string
+        return `${horas}:${minutos}:${segundos}, 00000000  ${ampm}`;
+    }
+
     generateEXCEL() {
         const filteredData = this.dt1?.filteredValue;
 
@@ -273,14 +292,14 @@ export class AsistenciageneralComponent implements OnInit {
 
     generarArchivoCarga(){
 
-            let listaRelojes : string = '';
-        listaRelojes   =  this.relojesSeleccionados.join('|');
-        //console.log("Relojes seleccionados: " + listaRelojes);
+            let valoresSeleccionados : string = '';
+        valoresSeleccionados   =  this.departamentoSeleccionados.join('|');
+        
         this.mrS
-            .getAsistenciaByDateRange(this.stardate, this.enddate, listaRelojes)
+            .getAsistenciaByDateRange(this.stardate, this.enddate, valoresSeleccionados)
             .subscribe({
                 next: (data) => {
-                    //console.log('Datos obtenidos:', data); // Console log para verificar la data
+                    
 
                     this.Asistenciagenerales = data;
                     let contenido = '';
